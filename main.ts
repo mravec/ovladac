@@ -139,9 +139,6 @@ joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P12, joystickbit.ButtonType
         . # # # .
         `)
 })
-input.onLogoEvent(TouchButtonEvent.Pressed, function () {
-	
-})
 let xJoystick = 0
 let xMikrobit = 0
 let pravyMotor = 0
