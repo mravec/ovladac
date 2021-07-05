@@ -86,11 +86,11 @@ input.onButtonPressed(Button.B, function () {
 function nastavit_rychlosti_motorov_Mikrobit () {
     xMikrobit = input.acceleration(Dimension.X)
     if (xMikrobit < -200) {
-        lavyMotor = rychlost
-        pravyMotor = rychlost * Math.map(xMikrobit, -1100, -200, 0.2, 1)
-    } else if (xMikrobit > 600) {
-        lavyMotor = rychlost * Math.map(xMikrobit, 200, 1100, 1, 0.2)
         pravyMotor = rychlost
+        lavyMotor = rychlost * Math.map(xMikrobit, -1100, -200, 0.2, 1)
+    } else if (xMikrobit > 600) {
+        pravyMotor = rychlost * Math.map(xMikrobit, 200, 1100, 1, 0.2)
+        lavyMotor = rychlost
     } else {
         lavyMotor = rychlost
         pravyMotor = rychlost
@@ -100,9 +100,9 @@ function nastavit_rychlosti_motorov_Joystick () {
     xJoystick = joystickbit.getRockerValue(joystickbit.rockerType.X)
     if (xJoystick < 450) {
         lavyMotor = rychlost
-        pravyMotor = rychlost * Math.map(xJoystick, 0, 450, 0.2, 1)
+        pravyMotor = rychlost * Math.map(xJoystick, 0, 450, 0.4, 1)
     } else if (xJoystick > 600) {
-        lavyMotor = rychlost * Math.map(xJoystick, 600, 1023, 1, 0.2)
+        lavyMotor = rychlost * Math.map(xJoystick, 600, 1023, 1, 0.4)
         pravyMotor = rychlost
     } else {
         lavyMotor = rychlost
