@@ -109,6 +109,16 @@ function nastavit_rychlosti_motorov_Joystick () {
         pravyMotor = rychlost
     }
 }
+input.onLogoEvent(TouchButtonEvent.Touched, function () {
+    basic.showLeds(`
+        . # # # .
+        # # # # #
+        # # . # #
+        # # # # #
+        . # # # .
+        `)
+    rychlost = 0
+})
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P13, joystickbit.ButtonType.down, function () {
     basic.showLeds(`
         . # # # .
@@ -131,16 +141,6 @@ joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P12, joystickbit.ButtonType
 })
 input.onLogoEvent(TouchButtonEvent.Pressed, function () {
 	
-})
-input.onGesture(Gesture.ThreeG, function () {
-    basic.showLeds(`
-        . # # # .
-        # # # # #
-        # # . # #
-        # # # # #
-        . # # # .
-        `)
-    rychlost = 0
 })
 let xJoystick = 0
 let xMikrobit = 0
