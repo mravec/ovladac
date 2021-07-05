@@ -183,7 +183,6 @@ basic.forever(function () {
         nastavit_rychlosti_motorov_Mikrobit()
     }
     radio.sendValue("lv", lavyMotor)
-    radio.sendValue("pv", lavyMotor)
-    vypis()
+    radio.sendValue("pv", pravyMotor)
     basic.pause(100)
 })
