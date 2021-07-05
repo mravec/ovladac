@@ -19,25 +19,38 @@ input.onButtonPressed(Button.A, function () {
         `)
 })
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P15, joystickbit.ButtonType.down, function () {
-    radio.sendString("F")
+    modeJoystick = 0
     basic.showLeds(`
-        # # # # .
-        # . . . .
-        # # # # .
-        # . . . .
-        # . . . .
+        . . # . .
+        . . # . .
+        # # # # #
+        . . # . .
+        . . # . .
         `)
 })
-function nastavit_rychlost_Joystick () {
-    y = joystickbit.getRockerValue(joystickbit.rockerType.Y)
-    if (y > 600) {
-        rychlost += Math.map(y, 600, 1023, 0, 4)
+function nastavit_rychlost_Mikrobit () {
+    yMikrobit = input.acceleration(Dimension.Y)
+    if (yMikrobit < -200) {
+        rychlost += Math.map(yMikrobit, -1100, -200, 8, 0)
         if (rychlost > 100) {
             rychlost = 100
         }
+    } else if (yMikrobit > 200) {
+        rychlost += Math.map(yMikrobit, 200, 1100, 0, -8)
+        if (rychlost < -100) {
+            rychlost = -100
+        }
     }
-    if (y < 450) {
-        rychlost += Math.map(y, 0, 450, -4, 0)
+}
+function nastavit_rychlost_Joystick () {
+    yJoyStick = joystickbit.getRockerValue(joystickbit.rockerType.Y)
+    if (yJoyStick > 600) {
+        rychlost += Math.map(yJoyStick, 600, 1023, 0, 8)
+        if (rychlost > 100) {
+            rychlost = 100
+        }
+    } else if (yJoyStick < 450) {
+        rychlost += Math.map(yJoyStick, 0, 450, -8, 0)
         if (rychlost < -100) {
             rychlost = -100
         }
@@ -57,7 +70,7 @@ function vypis () {
     s += 1
     if (s > 9) {
         s = 0
-        serial.writeLine("rychlost=" + convertToText(rychlost) + ", lv=" + convertToText(lavyMotor) + ", pv=" + convertToText(pravyMotor))
+        serial.writeLine("rychlost=" + convertToText(rychlost) + ", lv=" + convertToText(lavyMotor) + ", pv=" + convertToText(pravyMotor) + ", ak_x=" + input.acceleration(Dimension.X) + ", ak_y=" + input.acceleration(Dimension.Y))
     }
 }
 input.onButtonPressed(Button.B, function () {
@@ -70,20 +83,31 @@ input.onButtonPressed(Button.B, function () {
         # # # . .
         `)
 })
-function nastavit_rychlosti_motorov_Joystick () {
-    x = joystickbit.getRockerValue(joystickbit.rockerType.X)
-    if (x < 450) {
+function nastavit_rychlosti_motorov_Mikrobit () {
+    xMikrobit = input.acceleration(Dimension.X)
+    if (xMikrobit < -200) {
         lavyMotor = rychlost
-        pravyMotor = rychlost * Math.map(x, 0, 450, 0.2, 1)
-    } else if (x > 600) {
-        lavyMotor = rychlost * Math.map(x, 600, 1023, 1, 0.2)
+        pravyMotor = rychlost * Math.map(xMikrobit, -1100, -200, 0.2, 1)
+    } else if (xMikrobit > 600) {
+        lavyMotor = rychlost * Math.map(xMikrobit, 200, 1100, 1, 0.2)
         pravyMotor = rychlost
     } else {
         lavyMotor = rychlost
         pravyMotor = rychlost
     }
-    radio.sendValue("lv", lavyMotor)
-    radio.sendValue("pv", lavyMotor)
+}
+function nastavit_rychlosti_motorov_Joystick () {
+    xJoystick = joystickbit.getRockerValue(joystickbit.rockerType.X)
+    if (xJoystick < 450) {
+        lavyMotor = rychlost
+        pravyMotor = rychlost * Math.map(xJoystick, 0, 450, 0.2, 1)
+    } else if (xJoystick > 600) {
+        lavyMotor = rychlost * Math.map(xJoystick, 600, 1023, 1, 0.2)
+        pravyMotor = rychlost
+    } else {
+        lavyMotor = rychlost
+        pravyMotor = rychlost
+    }
 }
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P13, joystickbit.ButtonType.down, function () {
     basic.showLeds(`
@@ -96,14 +120,17 @@ joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P13, joystickbit.ButtonType
     rychlost = 100
 })
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P12, joystickbit.ButtonType.down, function () {
-    radio.sendString("C")
+    modeJoystick = 1
     basic.showLeds(`
-        # # # # .
-        # . . # .
-        # . . . .
-        # . . # .
-        # # # # .
+        . # # # .
+        # . # . #
+        . . # . .
+        # . # . #
+        . # # # .
         `)
+})
+input.onLogoEvent(TouchButtonEvent.Pressed, function () {
+	
 })
 input.onGesture(Gesture.ThreeG, function () {
     basic.showLeds(`
@@ -115,10 +142,13 @@ input.onGesture(Gesture.ThreeG, function () {
         `)
     rychlost = 0
 })
-let x = 0
+let xJoystick = 0
+let xMikrobit = 0
 let pravyMotor = 0
 let lavyMotor = 0
-let y = 0
+let yJoyStick = 0
+let yMikrobit = 0
+let modeJoystick = 0
 let s = 0
 let rychlost = 0
 serial.redirectToUSB()
@@ -127,8 +157,13 @@ radio.setGroup(1)
 basic.showIcon(IconNames.SmallSquare)
 rychlost = 0
 s = 0
+modeJoystick = 1
 /**
- * x=512; y=1023
+ * ================= Joystick ==================
+ * 
+ *                                        
+ * 
+ *                                       x=512; y=1023
  * 
  *                                                   |
  * 
@@ -143,13 +178,15 @@ s = 0
  *                                        x=512; y=0
  */
 basic.forever(function () {
-    let modeJoystick = 0
-    if (modeJoystick) {
+    if (modeJoystick == 1) {
         nastavit_rychlost_Joystick()
         nastavit_rychlosti_motorov_Joystick()
     } else {
-    	
+        nastavit_rychlost_Mikrobit()
+        nastavit_rychlosti_motorov_Mikrobit()
     }
+    radio.sendValue("lv", lavyMotor)
+    radio.sendValue("pv", lavyMotor)
     vypis()
     basic.pause(100)
 })
