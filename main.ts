@@ -7,6 +7,7 @@ joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P14, joystickbit.ButtonType
         # # # # .
         `)
     rychlost = -100
+    joystickbit.Vibration_Motor(200)
 })
 input.onButtonPressed(Button.A, function () {
     radio.sendString("A")
@@ -118,6 +119,7 @@ input.onLogoEvent(TouchButtonEvent.Touched, function () {
         . # # # .
         `)
     rychlost = 0
+    soundExpression.spring.play()
 })
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P13, joystickbit.ButtonType.down, function () {
     basic.showLeds(`
@@ -128,6 +130,7 @@ joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P13, joystickbit.ButtonType
         . . # . .
         `)
     rychlost = 100
+    joystickbit.Vibration_Motor(200)
 })
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P12, joystickbit.ButtonType.down, function () {
     modeJoystick = 1
@@ -155,6 +158,7 @@ basic.showIcon(IconNames.SmallSquare)
 rychlost = 0
 s = 0
 modeJoystick = 1
+soundExpression.hello.play()
 /**
  * ================= Joystick ==================
  * 
