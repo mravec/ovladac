@@ -1,10 +1,10 @@
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P14, joystickbit.ButtonType.down, function () {
     basic.showLeds(`
-        # # # # .
-        # . . . .
-        # # # # .
-        # . . . .
-        # # # # .
+        . . # . .
+        . . # . .
+        . . # . .
+        # . # . #
+        . # # # .
         `)
     rychlost = -100
     joystickbit.Vibration_Motor(200)
