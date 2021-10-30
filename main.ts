@@ -1,3 +1,22 @@
+/**
+ * ================= Joystick ==================
+ * 
+ *                                        
+ * 
+ *                                       x=512; y=1023
+ * 
+ *                                                   |
+ * 
+ *                                                   |
+ * 
+ * x=1023; y=512 --------- x=512; y=512 ---------- x=0; y=512
+ * 
+ *                                                   |
+ * 
+ *                                                   |
+ * 
+ *                                        x=512; y=0
+ */
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P14, joystickbit.ButtonType.down, function () {
     basic.showLeds(`
         . . # . .
@@ -46,12 +65,12 @@ function nastavit_rychlost_Mikrobit () {
 function nastavit_rychlost_Joystick () {
     yJoyStick = joystickbit.getRockerValue(joystickbit.rockerType.Y)
     if (yJoyStick > 600) {
-        rychlost += Math.map(yJoyStick, 600, 1023, 0, 8)
+        rychlost += Math.map(yJoyStick, 600, 1023, 0, 3)
         if (rychlost > 100) {
             rychlost = 100
         }
     } else if (yJoyStick < 450) {
-        rychlost += Math.map(yJoyStick, 0, 450, -8, 0)
+        rychlost += Math.map(yJoyStick, 0, 450, -3, 0)
         if (rychlost < -100) {
             rychlost = -100
         }
@@ -111,15 +130,16 @@ function nastavit_rychlosti_motorov_Joystick () {
     }
 }
 input.onLogoEvent(TouchButtonEvent.Touched, function () {
-    basic.showLeds(`
-        . # # # .
-        # # # # #
-        # # . # #
-        # # # # #
-        . # # # .
-        `)
-    rychlost = 0
-    soundExpression.spring.play()
+    if (stop == 0) {
+        stop = 1
+        radio.sendValue("lv", 0)
+        radio.sendValue("pv", 0)
+        rychlost = 0
+        soundExpression.spring.play()
+    } else {
+        stop = 0
+        soundExpression.happy.play()
+    }
 })
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P13, joystickbit.ButtonType.down, function () {
     basic.showLeds(`
@@ -151,6 +171,9 @@ let yMikrobit = 0
 let modeJoystick = 0
 let s = 0
 let rychlost = 0
+let stop = 0
+stop = 1
+let blinkDisplay = 0
 serial.redirectToUSB()
 joystickbit.initJoystickBit()
 radio.setGroup(1)
@@ -159,34 +182,44 @@ rychlost = 0
 s = 0
 modeJoystick = 1
 soundExpression.hello.play()
-/**
- * ================= Joystick ==================
- * 
- *                                        
- * 
- *                                       x=512; y=1023
- * 
- *                                                   |
- * 
- *                                                   |
- * 
- * x=1023; y=512 --------- x=512; y=512 ---------- x=0; y=512
- * 
- *                                                   |
- * 
- *                                                   |
- * 
- *                                        x=512; y=0
- */
 basic.forever(function () {
-    if (modeJoystick == 1) {
-        nastavit_rychlost_Joystick()
-        nastavit_rychlosti_motorov_Joystick()
+    if (stop == 1) {
+        basic.showLeds(`
+            # # # # #
+            # # # # #
+            # # . # #
+            # # # # #
+            # # # # #
+            `)
     } else {
-        nastavit_rychlost_Mikrobit()
-        nastavit_rychlosti_motorov_Mikrobit()
+        if (modeJoystick == 1) {
+            nastavit_rychlost_Joystick()
+            nastavit_rychlosti_motorov_Joystick()
+        } else {
+            nastavit_rychlost_Mikrobit()
+            nastavit_rychlosti_motorov_Mikrobit()
+        }
+        radio.sendValue("lv", lavyMotor)
+        radio.sendValue("pv", pravyMotor)
+        if (blinkDisplay == 1) {
+            basic.showLeds(`
+                . . . . .
+                . # # # .
+                . # . # .
+                . # # # .
+                . . . . .
+                `)
+            blinkDisplay = 0
+        } else {
+            basic.showLeds(`
+                # # # # #
+                # . . . #
+                # . . . #
+                # . . . #
+                # # # # #
+                `)
+            blinkDisplay = 1
+        }
     }
-    radio.sendValue("lv", lavyMotor)
-    radio.sendValue("pv", pravyMotor)
     basic.pause(100)
 })
