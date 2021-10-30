@@ -138,6 +138,13 @@ input.onLogoEvent(TouchButtonEvent.Touched, function () {
         soundExpression.spring.play()
     } else {
         stop = 0
+        basic.showLeds(`
+            # . . . #
+            . # # # .
+            . # . # .
+            . # # # .
+            # . . . #
+            `)
         soundExpression.happy.play()
     }
 })
@@ -201,25 +208,6 @@ basic.forever(function () {
         }
         radio.sendValue("lv", lavyMotor)
         radio.sendValue("pv", pravyMotor)
-        if (blinkDisplay == 1) {
-            basic.showLeds(`
-                . . . . .
-                . # # # .
-                . # . # .
-                . # # # .
-                . . . . .
-                `)
-            blinkDisplay = 0
-        } else {
-            basic.showLeds(`
-                # # # # #
-                # . . . #
-                # . . . #
-                # . . . #
-                # # # # #
-                `)
-            blinkDisplay = 1
-        }
     }
     basic.pause(100)
 })
