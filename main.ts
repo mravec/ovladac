@@ -136,16 +136,23 @@ input.onLogoEvent(TouchButtonEvent.Touched, function () {
         radio.sendValue("pv", 0)
         rychlost = 0
         soundExpression.spring.play()
+        basic.showLeds(`
+            # # # # #
+            # # # # #
+            # # . # #
+            # # # # #
+            # # # # #
+            `)
     } else {
         stop = 0
-        basic.showLeds(`
-            # . . . #
-            . # # # .
-            . # . # .
-            . # # # .
-            # . . . #
-            `)
         soundExpression.happy.play()
+        basic.showLeds(`
+            . . # . .
+            . # # # .
+            # . # . #
+            . . # . .
+            . . # . .
+            `)
     }
 })
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P13, joystickbit.ButtonType.down, function () {
@@ -180,6 +187,13 @@ let s = 0
 let rychlost = 0
 let stop = 0
 stop = 1
+basic.showLeds(`
+    # # # # #
+    # # # # #
+    # # . # #
+    # # # # #
+    # # # # #
+    `)
 let blinkDisplay = 0
 serial.redirectToUSB()
 joystickbit.initJoystickBit()
@@ -190,15 +204,7 @@ s = 0
 modeJoystick = 1
 soundExpression.hello.play()
 basic.forever(function () {
-    if (stop == 1) {
-        basic.showLeds(`
-            # # # # #
-            # # # # #
-            # # . # #
-            # # # # #
-            # # # # #
-            `)
-    } else {
+    if (stop == 0) {
         if (modeJoystick == 1) {
             nastavit_rychlost_Joystick()
             nastavit_rychlosti_motorov_Joystick()
