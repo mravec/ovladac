@@ -198,7 +198,6 @@ let blinkDisplay = 0
 serial.redirectToUSB()
 joystickbit.initJoystickBit()
 radio.setGroup(1)
-basic.showIcon(IconNames.SmallSquare)
 rychlost = 0
 s = 0
 modeJoystick = 1
