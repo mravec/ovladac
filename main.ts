@@ -18,15 +18,15 @@
  *                                        x=512; y=0
  */
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P14, joystickbit.ButtonType.down, function () {
+    radio.sendString("E")
     basic.showLeds(`
-        . . # . .
-        . . # . .
-        . . # . .
-        # . # . #
-        . # # # .
+        # # # # .
+        # . . . .
+        # # # # .
+        # . . . .
+        # # # # .
         `)
-    rychlost = -100
-    joystickbit.Vibration_Motor(200)
+    joystickbit.Vibration_Motor(100)
 })
 input.onButtonPressed(Button.A, function () {
     radio.sendString("A")
@@ -39,14 +39,15 @@ input.onButtonPressed(Button.A, function () {
         `)
 })
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P15, joystickbit.ButtonType.down, function () {
-    modeJoystick = 0
+    radio.sendString("F")
     basic.showLeds(`
-        . . # . .
-        . . # . .
-        # # # # #
-        . . # . .
-        . . # . .
+        # # # . .
+        # . . . .
+        # # # . .
+        # . . . .
+        # . . . .
         `)
+    joystickbit.Vibration_Motor(100)
 })
 function nastavit_rychlost_Mikrobit () {
     yMikrobit = input.acceleration(Dimension.Y)
@@ -156,25 +157,26 @@ input.onLogoEvent(TouchButtonEvent.Touched, function () {
     }
 })
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P13, joystickbit.ButtonType.down, function () {
+    radio.sendString("D")
     basic.showLeds(`
-        . # # # .
-        # . # . #
-        # . # . #
-        . . # . .
-        . . # . .
+        # # # . .
+        # . . # .
+        # . . # .
+        # . . # .
+        # # # . .
         `)
-    rychlost = 100
-    joystickbit.Vibration_Motor(200)
+    joystickbit.Vibration_Motor(100)
 })
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P12, joystickbit.ButtonType.down, function () {
-    modeJoystick = 1
+    radio.sendString("C")
     basic.showLeds(`
-        . # # # .
-        # . # . #
-        . . # . .
-        # . # . #
-        . # # # .
+        # # # # .
+        # . . # .
+        # . . . .
+        # . . # .
+        # # # # .
         `)
+    joystickbit.Vibration_Motor(100)
 })
 let xJoystick = 0
 let xMikrobit = 0
@@ -182,7 +184,6 @@ let pravyMotor = 0
 let lavyMotor = 0
 let yJoyStick = 0
 let yMikrobit = 0
-let modeJoystick = 0
 let s = 0
 let rychlost = 0
 let stop = 0
@@ -200,7 +201,7 @@ joystickbit.initJoystickBit()
 radio.setGroup(1)
 rychlost = 0
 s = 0
-modeJoystick = 1
+let modeJoystick = 1
 soundExpression.hello.play()
 basic.forever(function () {
     if (stop == 0) {
